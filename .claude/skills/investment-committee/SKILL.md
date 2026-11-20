@@ -5,8 +5,9 @@ description: "Run a ticker through a 4-agent investment committee (macro, equity
 
 # Investment Committee
 
-**Version:** v1.4 (2026-11-20)
+**Version:** v1.5 (2026-11-20)
 **Change log:**
+- v1.5 (Trey's calls, after the HOOD v1.4 run): (1) The equity analyst's word limit rises from 650 to 1,200 words (Data block not counted). The fixed template's tables alone run past 650; HOOD's report was about 1,425. (2) Fix: the v1.1 rule on task-message notes had landed inside the equity analyst's task-message text in Step 1; it now sits below it.
 - v1.4 (Trey's calls): Two changes. (1) Fixed templates: every report (macro, equity, short seller, data flags, memo) is now written by filling in its file in `templates/`, with the same headings, tables and row labels every run, plus a `data` block of key numbers at the end. `scripts/save_run.py --check` enforces it, and a report that fails goes back to its agent. Before this the layout changed from run to run. (2) Keep the data: `scripts/save_run.py` now does all of Step 5. It also archives each run to `archive/<run>/` (reports, record.json, DCF config and outputs, peer data, price history) and appends a row to `data/runs.csv`. `scripts/track_record.py` scores past calls against SPY in `docs/track-record.md`. The 11 earlier runs were backfilled into `data/runs.csv` from their memo headers; their valuation fields are blank because the old memos had no fixed format.
 - v1.3 (Trey's call): Peer price history for the bottom-up beta now comes from Yahoo Finance's chart data, downloaded by `scripts/peers.py` itself, with Twelve Data as the backup for any symbol Yahoo misses. The analyst had been retyping about 500 weekly closes from Twelve Data's tool output, which can't be saved to a file. On the SPCX peers, Yahoo and Twelve Data betas differ by 0.02–0.07 and give the same relevered beta (1.45 vs 1.44).
 - v1.2 (Trey's call): The equity analyst now runs three tested scripts instead of writing new code each run: `scripts/edgar_facts.py` (SEC statements, TTM, balance sheet, cover shares, research asset), `scripts/peers.py` (comps and bottom-up beta) and `scripts/dcf.py` (Damodaran DCF, cases, growth-invariance test, reverse DCF, self-audit). `scripts/test_dcf.py` checks the DCF engine against the skill's Amazon, Tata, 3M and Facebook figures (all within 1%). On ADBE and SPCX the analyst took 7–11 minutes, mostly writing these by hand; the DCF math also differed from run to run. It must also batch fetches and write its report once.
@@ -80,9 +81,9 @@ Launch both agents in the same turn, in the background, by name. Wait for both t
 
 **Task message for `equity-analyst`:**
 > Ticker: <TICKER>. Company: <Company>. SEC CIK: <CIK> (10-digit: <CIK padded>). Date: <date>. <any useful note, such as when the fiscal year ends>.
+> Run folder: <run>. Write your report to <run>/equity.md.
 
 **Rule for notes in any task message:** describe a filing only with what EDGAR itself says: form type, filing date, item numbers, and a quoted phrase from the filing (for example "8-K <date>, items 2.01/3.02: '<a phrase copied from the filing>'"). Never name what a filing is about from memory or inference. If you haven't read it, give only the form, date and items, or leave the note out.
-> Run folder: <run>. Write your report to <run>/equity.md.
 
 If an agent returns a report but did not write its file, write the returned text to that file exactly as returned.
 

@@ -62,7 +62,7 @@ Run all other math in Python (Bash), not in your head. Batch your fetches: downl
 
 **Format (fixed, every run):** write your report by filling in `templates/equity.md`. Keep its title line, section headings, tables, column names and row labels exactly as they are and in the same order; replace every `<placeholder>`; do not add, drop or rename sections or rows (use the Notes line or a table's last column for anything extra). Fill in the `data` block at the end: plain numbers (no $ or commas), rates as decimals, `not assessed` where there is no data. The word limit does not count the Data block. Before you finish, run `python3 -I scripts/save_run.py <run folder> --check equity` and fix everything it reports.
 
-**What each section must contain, under 650 words:**
+**What each section must contain, under 1,200 words (the Data block does not count):**
 1. **Business:** three sentences on how it makes money and what drives it.
 2. **Quality table:** revenue growth, gross and operating margin, FCF margin, ROIC, net debt/EBITDA, share count change. Last 3 to 5 years, with sources.
 3. **Management:** 2 to 3 key points from the most recent earnings call or release (guidance, tone, changes), each with its IR link.
