@@ -16,3 +16,4 @@
 | 2026-11-20 | HOOD | v1.4 | $65.08 | WATCH | Medium | Good business, cheap, $100 | memos/IC_HOOD_2026-11-20.md |
 | 2026-11-20 | HOOD | v1.6 | $64.81 | PASS | Medium | Good business, cheap, $100 | memos/IC_HOOD_2026-11-20_v1.6.md |
 | 2026-11-20 | ORCL | v1.7 | $102.45 | WATCH | Low | — | memos/IC_ORCL_2026-11-20.md |
+| 2026-11-20 | AMD | v1.8 | $433.73 | WATCH | Low | — | memos/IC_AMD_2026-11-20.md |
