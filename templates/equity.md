@@ -60,8 +60,8 @@ Source: <scripts/edgar_facts.py output, filings and dates>. <One line of footnot
 **Self-audit flags:** <FLAG lines from dcf.py, or "None.">
 
 **Comps** (scripts/peers.py)
-| | EV/Sales | EV/EBIT | P/E | FCF yield |
-|---|---|---|---|---|
+| | EV/Sales | EV/EBIT | P/E | P/B | ROE | FCF yield |
+|---|---|---|---|---|---|---|
 
 Analysts (Robinhood, <date>): <buy / hold / sell>, mean target $<x>.
 
