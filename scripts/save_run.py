@@ -21,7 +21,7 @@ import argparse, csv, glob, json, os, re, shutil, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPORTS = ["macro", "equity", "short", "data_flags", "memo"]
-PLACEHOLDER = re.compile(r"<[^<>\s][^<>\n]{0,80}>")
+PLACEHOLDER = re.compile(r"<[^<>\s][^<>\n]{0,300}>")
 CSV_FIELDS = ["run", "date", "ticker", "skill_version", "verdict", "conviction", "position", "price",
               "value_bear", "value_base", "value_bull", "short_bear_price", "macro_call", "macro_confidence",
               "beta_bottom_up", "wacc_initial", "rf", "erp", "tv_share_base", "thesis_strength",
