@@ -1,0 +1,15 @@
+{
+  "_notes": "HOOD equity-mode (excess-return) valuation, $M. Book equity 10,078 incl. NCI 77 (10-Q 2026-09-30). ROE start ~TTM NI 1,984 / avg equity. rf FRED DGS10 2026-11-18; ERP Damodaran implied Nov 1 2026; beta bottom-up peers.py (SCHW, IBKR, COIN, SOFI) relevered to D/E 0.046; stable beta 1.17 = Damodaran Brokerage & Investment Banking levered beta (Jan 2026). Options = 9M shares reserved for outstanding awards x $64.77. Convert ($174.42 conversion) out of the money: no new shares. Legal accrual $96M already in book equity.",
+  "mode": "equity",
+  "years": 10,
+  "base_book_equity": 10078,
+  "roe": {"start": 0.20, "target": 0.22},
+  "growth": {"start": 0.15, "end": 0.045, "hold": 2},
+  "cost_of_equity": {"rf": 0.0507, "erp": 0.0441, "beta": 1.90, "stable_beta": 1.17, "hold": 5},
+  "terminal": {"g": 0.045, "roe": 0.16},
+  "bridge": {"nonop": 0, "minority": 77, "options": 583, "other_claims": 0, "shares": 900.49, "new_shares": 0},
+  "cases": {
+    "bear": {"roe": {"target": 0.14}, "growth": {"start": 0.08, "end": 0.035, "hold": 2}, "terminal": {"g": 0.035, "roe": 0.10}},
+    "bull": {"roe": {"target": 0.28}, "growth": {"start": 0.20, "end": 0.05, "hold": 3}, "terminal": {"g": 0.05, "roe": 0.20}}
+  }
+}

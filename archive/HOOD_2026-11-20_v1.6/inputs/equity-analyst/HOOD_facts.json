@@ -1,0 +1,795 @@
+{
+ "ticker": "HOOD",
+ "cik": 1783879,
+ "name": "Robinhood Markets, Inc.",
+ "source": "SEC XBRL company facts",
+ "flows": {
+  "revenue": {
+   "concept": "Revenues",
+   "ttm": {
+    "val": 5082000000,
+    "end": "2026-09-30",
+    "basis": "FY2025 + YTD to 2026-09-30 - prior YTD",
+    "form": "10-Q",
+    "filed": "2026-10-28"
+   },
+   "ytd": {
+    "start": "2026-01-01",
+    "end": "2026-09-30",
+    "val": 3799000000,
+    "form": "10-Q",
+    "filed": "2026-10-28",
+    "prior_val": 3190000000,
+    "quarter_val": 1424000000
+   },
+   "annual": {
+    "2019-12-31": {
+     "val": 277533000,
+     "form": "10-K",
+     "filed": "2022-02-24"
+    },
+    "2020-12-31": {
+     "val": 958000000,
+     "form": "10-K",
+     "filed": "2023-02-27"
+    },
+    "2021-12-31": {
+     "val": 1815000000,
+     "form": "10-K",
+     "filed": "2024-02-27"
+    },
+    "2022-12-31": {
+     "val": 1358000000,
+     "form": "10-K",
+     "filed": "2025-02-18"
+    },
+    "2023-12-31": {
+     "val": 1865000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2024-12-31": {
+     "val": 2951000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2025-12-31": {
+     "val": 4473000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    }
+   }
+  },
+  "cost_of_revenue": {
+   "concept": null,
+   "ttm": null,
+   "ytd": null,
+   "annual": {}
+  },
+  "gross_profit": {
+   "concept": null,
+   "ttm": null,
+   "ytd": null,
+   "annual": {}
+  },
+  "rd": {
+   "concept": "ResearchAndDevelopmentExpense",
+   "ttm": {
+    "val": 355000000,
+    "end": "2025-12-31",
+    "basis": "FY",
+    "form": "10-K/A",
+    "filed": "2026-02-20"
+   },
+   "ytd": null,
+   "annual": {
+    "2019-12-31": {
+     "val": 27700000,
+     "form": "10-K",
+     "filed": "2022-02-24"
+    },
+    "2020-12-31": {
+     "val": 52000000,
+     "form": "10-K",
+     "filed": "2023-02-27"
+    },
+    "2021-12-31": {
+     "val": 438000000,
+     "form": "10-K",
+     "filed": "2024-02-27"
+    },
+    "2022-12-31": {
+     "val": 381000000,
+     "form": "10-K",
+     "filed": "2025-02-18"
+    },
+    "2023-12-31": {
+     "val": 349000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2024-12-31": {
+     "val": 323000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2025-12-31": {
+     "val": 355000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    }
+   }
+  },
+  "operating_income": {
+   "concept": null,
+   "ttm": null,
+   "ytd": null,
+   "annual": {}
+  },
+  "pretax_income": {
+   "concept": "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+   "ttm": {
+    "val": 2406000000,
+    "end": "2026-09-30",
+    "basis": "FY2025 + YTD to 2026-09-30 - prior YTD",
+    "form": "10-Q",
+    "filed": "2026-10-28"
+   },
+   "ytd": {
+    "start": "2026-01-01",
+    "end": "2026-09-30",
+    "val": 1745000000,
+    "form": "10-Q",
+    "filed": "2026-10-28",
+    "prior_val": 1447000000,
+    "quarter_val": 625000000
+   },
+   "annual": {
+    "2019-12-31": {
+     "val": -107587000,
+     "form": "10-K",
+     "filed": "2022-02-24"
+    },
+    "2020-12-31": {
+     "val": 13000000,
+     "form": "10-K",
+     "filed": "2023-02-27"
+    },
+    "2021-12-31": {
+     "val": -3685000000,
+     "form": "10-K",
+     "filed": "2024-02-27"
+    },
+    "2022-12-31": {
+     "val": -1027000000,
+     "form": "10-K",
+     "filed": "2025-02-18"
+    },
+    "2023-12-31": {
+     "val": -533000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2024-12-31": {
+     "val": 1064000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2025-12-31": {
+     "val": 2108000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    }
+   }
+  },
+  "income_tax": {
+   "concept": "IncomeTaxExpenseBenefit",
+   "ttm": {
+    "val": 406000000,
+    "end": "2026-09-30",
+    "basis": "FY2025 + YTD to 2026-09-30 - prior YTD",
+    "form": "10-Q",
+    "filed": "2026-10-28"
+   },
+   "ytd": {
+    "start": "2026-01-01",
+    "end": "2026-09-30",
+    "val": 350000000,
+    "form": "10-Q",
+    "filed": "2026-10-28",
+    "prior_val": 169000000,
+    "quarter_val": 149000000
+   },
+   "annual": {
+    "2019-12-31": {
+     "val": -1018000,
+     "form": "10-K",
+     "filed": "2022-02-24"
+    },
+    "2020-12-31": {
+     "val": 6000000,
+     "form": "10-K",
+     "filed": "2023-02-27"
+    },
+    "2021-12-31": {
+     "val": 2000000,
+     "form": "10-K",
+     "filed": "2024-02-27"
+    },
+    "2022-12-31": {
+     "val": 1000000,
+     "form": "10-K",
+     "filed": "2025-02-18"
+    },
+    "2023-12-31": {
+     "val": 8000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2024-12-31": {
+     "val": -347000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2025-12-31": {
+     "val": 225000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    }
+   }
+  },
+  "net_income": {
+   "concept": "NetIncomeLoss",
+   "ttm": {
+    "val": 1984000000,
+    "end": "2026-09-30",
+    "basis": "FY2025 + YTD to 2026-09-30 - prior YTD",
+    "form": "10-Q",
+    "filed": "2026-10-28"
+   },
+   "ytd": {
+    "start": "2026-01-01",
+    "end": "2026-09-30",
+    "val": 1379000000,
+    "form": "10-Q",
+    "filed": "2026-10-28",
+    "prior_val": 1278000000,
+    "quarter_val": 468000000
+   },
+   "annual": {
+    "2019-12-31": {
+     "val": -106569000,
+     "form": "10-K",
+     "filed": "2022-02-24"
+    },
+    "2020-12-31": {
+     "val": 7000000,
+     "form": "10-K",
+     "filed": "2023-02-27"
+    },
+    "2021-12-31": {
+     "val": -3687000000,
+     "form": "10-K",
+     "filed": "2024-02-27"
+    },
+    "2022-12-31": {
+     "val": -1028000000,
+     "form": "10-K",
+     "filed": "2025-02-18"
+    },
+    "2023-12-31": {
+     "val": -541000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2024-12-31": {
+     "val": 1411000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2025-12-31": {
+     "val": 1883000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    }
+   }
+  },
+  "interest_expense": {
+   "concept": null,
+   "ttm": null,
+   "ytd": null,
+   "annual": {}
+  },
+  "da": {
+   "concept": "DepreciationDepletionAndAmortization",
+   "ttm": {
+    "val": 95000000,
+    "end": "2026-09-30",
+    "basis": "FY2025 + YTD to 2026-09-30 - prior YTD",
+    "form": "10-Q",
+    "filed": "2026-10-28"
+   },
+   "ytd": {
+    "start": "2026-01-01",
+    "end": "2026-09-30",
+    "val": 72000000,
+    "form": "10-Q",
+    "filed": "2026-10-28",
+    "prior_val": 63000000,
+    "quarter_val": null
+   },
+   "annual": {
+    "2019-12-31": {
+     "val": 5444000,
+     "form": "10-K",
+     "filed": "2022-02-24"
+    },
+    "2020-12-31": {
+     "val": 10000000,
+     "form": "10-K",
+     "filed": "2023-02-27"
+    },
+    "2021-12-31": {
+     "val": 26000000,
+     "form": "10-K",
+     "filed": "2024-02-27"
+    },
+    "2022-12-31": {
+     "val": 61000000,
+     "form": "10-K",
+     "filed": "2025-02-18"
+    },
+    "2023-12-31": {
+     "val": 71000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2024-12-31": {
+     "val": 77000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2025-12-31": {
+     "val": 86000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    }
+   }
+  },
+  "sbc": {
+   "concept": "ShareBasedCompensation",
+   "ttm": {
+    "val": 353000000,
+    "end": "2026-09-30",
+    "basis": "FY2025 + YTD to 2026-09-30 - prior YTD",
+    "form": "10-Q",
+    "filed": "2026-10-28"
+   },
+   "ytd": {
+    "start": "2026-01-01",
+    "end": "2026-09-30",
+    "val": 277000000,
+    "form": "10-Q",
+    "filed": "2026-10-28",
+    "prior_val": 229000000,
+    "quarter_val": null
+   },
+   "annual": {
+    "2019-12-31": {
+     "val": 26667000,
+     "form": "10-K",
+     "filed": "2022-02-24"
+    },
+    "2020-12-31": {
+     "val": 24000000,
+     "form": "10-K",
+     "filed": "2023-02-27"
+    },
+    "2021-12-31": {
+     "val": 1572000000,
+     "form": "10-K",
+     "filed": "2024-02-27"
+    },
+    "2022-12-31": {
+     "val": 654000000,
+     "form": "10-K",
+     "filed": "2025-02-18"
+    },
+    "2023-12-31": {
+     "val": 871000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2024-12-31": {
+     "val": 304000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2025-12-31": {
+     "val": 305000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    }
+   }
+  },
+  "ocf": {
+   "concept": "NetCashProvidedByUsedInOperatingActivities",
+   "ttm": {
+    "val": 3046000000,
+    "end": "2026-09-30",
+    "basis": "FY2025 + YTD to 2026-09-30 - prior YTD",
+    "form": "10-Q",
+    "filed": "2026-10-28"
+   },
+   "ytd": {
+    "start": "2026-01-01",
+    "end": "2026-09-30",
+    "val": 3983000000,
+    "form": "10-Q",
+    "filed": "2026-10-28",
+    "prior_val": 2575000000,
+    "quarter_val": null
+   },
+   "annual": {
+    "2019-12-31": {
+     "val": 1260085000,
+     "form": "10-K",
+     "filed": "2022-02-24"
+    },
+    "2020-12-31": {
+     "val": 1876000000,
+     "form": "10-K",
+     "filed": "2023-02-27"
+    },
+    "2021-12-31": {
+     "val": -885000000,
+     "form": "10-K",
+     "filed": "2024-02-27"
+    },
+    "2022-12-31": {
+     "val": -852000000,
+     "form": "10-K",
+     "filed": "2025-02-18"
+    },
+    "2023-12-31": {
+     "val": 1181000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2024-12-31": {
+     "val": -157000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2025-12-31": {
+     "val": 1638000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    }
+   }
+  },
+  "capex": {
+   "concept": "PaymentsToAcquireProductiveAssets",
+   "ttm": {
+    "val": 4000000,
+    "end": "2023-09-30",
+    "basis": "FY2022 + YTD to 2023-09-30 - prior YTD",
+    "form": "10-Q",
+    "filed": "2023-11-07"
+   },
+   "ytd": {
+    "start": "2023-01-01",
+    "end": "2023-09-30",
+    "val": 1000000,
+    "form": "10-Q",
+    "filed": "2023-11-07",
+    "prior_val": 25000000,
+    "quarter_val": null
+   },
+   "annual": {
+    "2019-12-31": {
+     "val": 7255000,
+     "form": "10-K",
+     "filed": "2022-02-24"
+    },
+    "2020-12-31": {
+     "val": 24000000,
+     "form": "10-K",
+     "filed": "2023-02-27"
+    },
+    "2021-12-31": {
+     "val": 63000000,
+     "form": "10-K",
+     "filed": "2023-02-27"
+    },
+    "2022-12-31": {
+     "val": 28000000,
+     "form": "10-K",
+     "filed": "2023-02-27"
+    }
+   }
+  },
+  "buybacks": {
+   "concept": "PaymentsForRepurchaseOfCommonStock",
+   "ttm": {
+    "val": 789000000,
+    "end": "2026-09-30",
+    "basis": "FY2025 + YTD to 2026-09-30 - prior YTD",
+    "form": "10-Q",
+    "filed": "2026-10-28"
+   },
+   "ytd": {
+    "start": "2026-01-01",
+    "end": "2026-09-30",
+    "val": 689000000,
+    "form": "10-Q",
+    "filed": "2026-10-28",
+    "prior_val": 553000000,
+    "quarter_val": null
+   },
+   "annual": {
+    "2021-12-31": {
+     "val": 0,
+     "form": "10-K",
+     "filed": "2024-02-27"
+    },
+    "2022-12-31": {
+     "val": 0,
+     "form": "10-K",
+     "filed": "2025-02-18"
+    },
+    "2023-12-31": {
+     "val": 608000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2024-12-31": {
+     "val": 257000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2025-12-31": {
+     "val": 653000000,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    }
+   }
+  },
+  "diluted_shares_avg": {
+   "concept": "WeightedAverageNumberOfDilutedSharesOutstanding",
+   "ttm": {
+    "val": 912781846,
+    "end": "2026-09-30",
+    "basis": "FY2025 + YTD to 2026-09-30 - prior YTD",
+    "form": "10-Q",
+    "filed": "2026-10-28"
+   },
+   "ytd": {
+    "start": "2026-01-01",
+    "end": "2026-09-30",
+    "val": 913000000,
+    "form": "10-Q",
+    "filed": "2026-10-28",
+    "prior_val": 919000000,
+    "quarter_val": 911000000
+   },
+   "annual": {
+    "2019-12-31": {
+     "val": 221664610,
+     "form": "10-K",
+     "filed": "2022-02-24"
+    },
+    "2020-12-31": {
+     "val": 244997388,
+     "form": "10-K",
+     "filed": "2023-02-27"
+    },
+    "2021-12-31": {
+     "val": 492381190,
+     "form": "10-K",
+     "filed": "2024-02-27"
+    },
+    "2022-12-31": {
+     "val": 878630024,
+     "form": "10-K",
+     "filed": "2025-02-18"
+    },
+    "2023-12-31": {
+     "val": 890857659,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2024-12-31": {
+     "val": 906171504,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    },
+    "2025-12-31": {
+     "val": 918781846,
+     "form": "10-K/A",
+     "filed": "2026-02-20"
+    }
+   }
+  }
+ },
+ "stocks": {
+  "cash": {
+   "concept": "CashAndCashEquivalentsAtCarryingValue",
+   "val": 5829000000,
+   "end": "2026-09-30",
+   "form": "10-Q",
+   "filed": "2026-10-28",
+   "stale": false
+  },
+  "st_investments": null,
+  "lt_investments": null,
+  "debt_current": null,
+  "debt_noncurrent": {
+   "concept": "LongTermDebtNoncurrent",
+   "val": 2660000000,
+   "end": "2026-09-30",
+   "form": "10-Q",
+   "filed": "2026-10-28",
+   "stale": false
+  },
+  "debt_total": null,
+  "op_lease_liab": {
+   "concept": "OperatingLeaseLiability",
+   "val": 217000000,
+   "end": "2026-09-30",
+   "form": "10-Q",
+   "filed": "2026-10-28",
+   "stale": false
+  },
+  "fin_lease_liab": null,
+  "equity": {
+   "concept": "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+   "val": 10078000000,
+   "end": "2026-09-30",
+   "form": "10-Q",
+   "filed": "2026-10-28",
+   "stale": false
+  },
+  "minority_interest": {
+   "concept": "MinorityInterest",
+   "val": 77000000,
+   "end": "2026-09-30",
+   "form": "10-Q",
+   "filed": "2026-10-28",
+   "stale": false
+  },
+  "total_assets": {
+   "concept": "Assets",
+   "val": 58271000000,
+   "end": "2026-09-30",
+   "form": "10-Q",
+   "filed": "2026-10-28",
+   "stale": false
+  },
+  "goodwill": {
+   "concept": "Goodwill",
+   "val": 515000000,
+   "end": "2026-09-30",
+   "form": "10-Q",
+   "filed": "2026-10-28",
+   "stale": false
+  }
+ },
+ "annual": {
+  "2021-12-31": {
+   "revenue": 1815000000,
+   "cost_of_revenue": null,
+   "gross_profit": null,
+   "rd": 438000000,
+   "operating_income": null,
+   "pretax_income": -3685000000,
+   "income_tax": 2000000,
+   "net_income": -3687000000,
+   "interest_expense": null,
+   "da": 26000000,
+   "sbc": 1572000000,
+   "ocf": -885000000,
+   "capex": 63000000,
+   "buybacks": 0,
+   "diluted_shares_avg": 492381190,
+   "cash": 6253000000,
+   "st_investments": null,
+   "equity": 7293000000
+  },
+  "2022-12-31": {
+   "revenue": 1358000000,
+   "cost_of_revenue": null,
+   "gross_profit": null,
+   "rd": 381000000,
+   "operating_income": null,
+   "pretax_income": -1027000000,
+   "income_tax": 1000000,
+   "net_income": -1028000000,
+   "interest_expense": null,
+   "da": 61000000,
+   "sbc": 654000000,
+   "ocf": -852000000,
+   "capex": 28000000,
+   "buybacks": 0,
+   "diluted_shares_avg": 878630024,
+   "cash": 6339000000,
+   "st_investments": null,
+   "equity": 6956000000
+  },
+  "2023-12-31": {
+   "revenue": 1865000000,
+   "cost_of_revenue": null,
+   "gross_profit": null,
+   "rd": 349000000,
+   "operating_income": null,
+   "pretax_income": -533000000,
+   "income_tax": 8000000,
+   "net_income": -541000000,
+   "interest_expense": null,
+   "da": 71000000,
+   "sbc": 871000000,
+   "ocf": 1181000000,
+   "capex": null,
+   "buybacks": 608000000,
+   "diluted_shares_avg": 890857659,
+   "cash": 4835000000,
+   "st_investments": null,
+   "equity": 6696000000
+  },
+  "2024-12-31": {
+   "revenue": 2951000000,
+   "cost_of_revenue": null,
+   "gross_profit": null,
+   "rd": 323000000,
+   "operating_income": null,
+   "pretax_income": 1064000000,
+   "income_tax": -347000000,
+   "net_income": 1411000000,
+   "interest_expense": null,
+   "da": 77000000,
+   "sbc": 304000000,
+   "ocf": -157000000,
+   "capex": null,
+   "buybacks": 257000000,
+   "diluted_shares_avg": 906171504,
+   "cash": 4332000000,
+   "st_investments": null,
+   "equity": 7972000000
+  },
+  "2025-12-31": {
+   "revenue": 4473000000,
+   "cost_of_revenue": null,
+   "gross_profit": null,
+   "rd": 355000000,
+   "operating_income": null,
+   "pretax_income": 2108000000,
+   "income_tax": 225000000,
+   "net_income": 1883000000,
+   "interest_expense": null,
+   "da": 86000000,
+   "sbc": 305000000,
+   "ocf": 1638000000,
+   "capex": null,
+   "buybacks": 653000000,
+   "diluted_shares_avg": 918781846,
+   "cash": 4261000000,
+   "st_investments": null,
+   "equity": 9151000000
+  }
+ },
+ "balance_sheet_date": "2026-09-30",
+ "shares_cover": {
+  "val": 899000000,
+  "date": "2026-09-30",
+  "form": "10-Q",
+  "fallback": "basic weighted-average shares, latest period (WeightedAverageNumberOfSharesOutstandingBasic); not the cover page: use the filing's cover count if it differs"
+ },
+ "research_asset": {
+  "life": 3,
+  "asset": 686666666.6666667,
+  "amortization": 351000000.0,
+  "current_rd": 355000000,
+  "ebit_adjustment": 4000000.0,
+  "fiscal_year": "2025-12-31"
+ }
+}
