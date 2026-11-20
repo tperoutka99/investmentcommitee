@@ -13,3 +13,4 @@
 | 2026-11-20 | MRVL | v0.9 | $138.47 | WATCH | Low | — (not given) | memos/IC_MRVL_2026-11-20.md |
 | 2026-11-20 | ADBE | v1.0 | $225.38 | BUY | Medium (starter) | Good business, cheap, no value given | memos/IC_ADBE_2026-11-20.md |
 | 2026-11-20 | SPCX | v1.0 | $132.87 | PASS | High | Good business, expensive, no value given | memos/IC_SPCX_2026-11-20.md |
+| 2026-11-20 | HOOD | v1.4 | $65.08 | WATCH | Medium | Good business, cheap, $100 | memos/IC_HOOD_2026-11-20.md |

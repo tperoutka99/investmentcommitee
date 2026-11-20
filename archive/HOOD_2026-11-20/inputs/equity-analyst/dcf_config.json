@@ -1,0 +1,79 @@
+{
+ "_notes": "HOOD 2026-11-20. $M. Base year = FY2026E (YTD 9M 3,799 actual + Q4E 1,501). Year 1 = FY2027. Margin = GAAP (net revenues - total opex)/net revenues; 9M 2026 = 44.0%. IC = equity 10,078 + convert principal 2,200 - strict cash 5,829 + research asset 687 (10-Q 2026-09-30; edgar_facts.py). Credit Card Funding Trust non-recourse borrowings (839) treated as operating funding of the card book, not debt.",
+ "mode": "revenue",
+ "years": 10,
+ "base_revenue": 5300,
+ "base_margin": 0.44,
+ "invested_capital": 7136,
+ "growth": {
+  "start": 0.2,
+  "end": 0.04,
+  "hold": 2
+ },
+ "margin": {
+  "target": 0.42,
+  "rule": "converge_half"
+ },
+ "sales_to_capital": 1.0,
+ "tax": 0.21,
+ "marginal_tax": 0.25,
+ "wacc": {
+  "rf": 0.0507,
+  "erp": 0.0441,
+  "beta_u": 1.84,
+  "de": 0.037,
+  "tax": 0.25,
+  "pretax_kd": 0.0657,
+  "stable_beta": 1.2,
+  "stable_debt_ratio": 0.1,
+  "stable_kd": 0.0607,
+  "hold": 5
+ },
+ "terminal": {
+  "g": 0.04,
+  "roc": 0.15
+ },
+ "bridge": {
+  "cash": 5829,
+  "nonop": 0,
+  "debt": 2200,
+  "minority": 77,
+  "options": 987,
+  "other_claims": 96,
+  "shares": 900.49,
+  "new_shares": 0
+ },
+ "rf_for_check": 0.0507,
+ "cases": {
+  "bear": {
+   "growth": {
+    "start": 0.1,
+    "end": 0.03,
+    "hold": 1
+   },
+   "margin": {
+    "target": 0.32
+   },
+   "sales_to_capital": 0.7,
+   "terminal": {
+    "g": 0.03,
+    "roc": 0.1
+   }
+  },
+  "bull": {
+   "growth": {
+    "start": 0.28,
+    "end": 0.045,
+    "hold": 2
+   },
+   "margin": {
+    "target": 0.48
+   },
+   "sales_to_capital": 0.9,
+   "terminal": {
+    "g": 0.045,
+    "roc": 0.2
+   }
+  }
+ }
+}
