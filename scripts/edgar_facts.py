@@ -18,7 +18,7 @@ from datetime import date
 UA = os.environ.get("SEC_USER_AGENT") or "IC research tool research@example.com"
 
 FLOWS = {  # name: candidate us-gaap concepts, first match with data wins
-    "revenue": ["RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues",
+    "revenue": ["RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues", "RevenuesNetOfInterestExpense",
                 "RevenueFromContractWithCustomerIncludingAssessedTax", "SalesRevenueNet"],
     "cost_of_revenue": ["CostOfRevenue", "CostOfGoodsAndServicesSold"],
     "gross_profit": ["GrossProfit"],
@@ -29,7 +29,7 @@ FLOWS = {  # name: candidate us-gaap concepts, first match with data wins
     "pretax_income": ["IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
                       "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments"],
     "income_tax": ["IncomeTaxExpenseBenefit"],
-    "net_income": ["NetIncomeLoss", "ProfitLoss"],
+    "net_income": ["NetIncomeLoss", "NetIncomeLossAvailableToCommonStockholdersBasic", "ProfitLoss"],
     "interest_expense": ["InterestExpense", "InterestExpenseNonoperating", "InterestExpenseDebt"],
     "da": ["DepreciationDepletionAndAmortization", "DepreciationAmortizationAndAccretionNet",
            "DepreciationAndAmortization"],
@@ -83,15 +83,19 @@ def resolve(ident):
 def dur(s, e):
     return (date.fromisoformat(e) - date.fromisoformat(s)).days
 
-def units_of(facts, concept):
-    for ns in ("us-gaap", "ifrs-full"):
+PERIODIC = ("10-K", "10-Q", "10-KT", "20-F", "40-F", "10-K/A", "10-Q/A", "20-F/A")
+
+def units_of(facts, concept, any_form=False):
+    """Facts for a concept, from periodic reports only (proxies and 8-Ks can tag the same concept in other scales)."""
+    for ns in ("us-gaap", "ifrs-full", "dei"):
         c = facts.get(ns, {}).get(concept)
         if c:
             u = c["units"]
-            return u.get("USD") or u.get("shares") or next(iter(u.values()))
+            u = u.get("USD") or u.get("shares") or next(iter(u.values()))
+            return u if any_form else [x for x in u if x.get("form") in PERIODIC]
     return None
 
-def flow_series(facts, names):
+def flow_series(facts, names, prefer_larger=False):
     """Return (concept, {fy_end: val} annual, ttm dict) for the first concept with data."""
     best = None
     for n in names:
@@ -109,6 +113,11 @@ def flow_series(facts, names):
         latest_end = max(k[1] for k in rows)
         if best is None or latest_end > best[3]:
             best = (n, rows, None, latest_end)
+        elif prefer_larger and latest_end == best[3]:
+            cur = max((v["val"] for k, v in rows.items() if k[1] == latest_end), default=0)
+            old = max((v["val"] for k, v in best[1].items() if k[1] == latest_end), default=0)
+            if cur > old:
+                best = (n, rows, None, latest_end)
     if not best:
         return None, {}, None, None
     n, rows, _, latest_end = best
@@ -172,7 +181,7 @@ def build(ident, years=5, rd_life=None, out=None):
            "flows": {}, "stocks": {}, "annual": {}}
     fy_ends = set()
     for key, names in FLOWS.items():
-        n, annual, ttm, ytd = flow_series(facts, names)
+        n, annual, ttm, ytd = flow_series(facts, names, prefer_larger=(key == "revenue"))
         res["flows"][key] = {"concept": n, "ttm": ttm, "ytd": ytd,
                              "annual": {e: {"val": x["val"], "form": x.get("form"), "filed": x["filed"]} for e, x in annual.items()}}
         if key == "revenue":
@@ -187,6 +196,8 @@ def build(ident, years=5, rd_life=None, out=None):
                                                   "stale": b[1]["end"] != bs_date}
     # cover-page shares (sum of classes on the latest date)
     dei = facts.get("dei", {}).get("EntityCommonStockSharesOutstanding", {}).get("units", {}).get("shares", [])
+    if dei and bs_date and (date.fromisoformat(bs_date) - date.fromisoformat(max(x["end"] for x in dei))).days > 120:
+        dei = []   # cover-page count is stale (older than the latest balance sheet); use the fallback below
     if dei:
         last = max(x["end"] for x in dei)
         latest_filed = max(x["filed"] for x in dei if x["end"] == last)
@@ -199,6 +210,8 @@ def build(ident, years=5, rd_life=None, out=None):
             u = units_of(facts, concept)
             if u:
                 x = max(u, key=lambda x: (x["end"], x["filed"]))
+                if bs_date and (date.fromisoformat(bs_date) - date.fromisoformat(x["end"])).days > 120:
+                    continue   # stale
                 res["shares_cover"] = {"val": x["val"], "date": x["end"], "form": x.get("form"),
                                        "fallback": f"{label} ({concept}); not the cover page: use the filing's cover count if it differs"}
                 break

@@ -146,6 +146,8 @@ def main():
                    pe=mcap / ni if mcap and ni and ni > 0 else None,
                    fcf_yield=fcf / mcap if mcap and fcf is not None else None,
                    de=debt / mcap if mcap else None, tax=t_rate,
+                   pb=mcap / stock(r, "equity") if mcap and stock(r, "equity") else None,
+                   roe=ni / stock(r, "equity") if ni is not None and stock(r, "equity") else None,
                    ttm_basis=(r["flows"]["revenue"]["ttm"] or {}).get("basis"),
                    bs_date=r.get("balance_sheet_date"), is_target=(t == (a.target or "").upper()))
         if closes and t in closes and not row["is_target"]:
@@ -154,11 +156,13 @@ def main():
         rows.append(row)
     f = lambda v, d=1, s="x": "n/m" if v is None else f"{v:.{d}f}{s}"
     print("**Comps** (TTM; financials SEC XBRL company facts; prices as given)")
-    print("| | EV/Sales | EV/EBIT | P/E | FCF yield | D/E | Tax | Balance sheet | TTM basis |")
-    print("|---|---|---|---|---|---|---|---|---|")
+    print("For banks, brokers and insurers use P/E, P/B and ROE: EV, EV/Sales, EV/EBIT and D/E mix customer funding with corporate debt.")
+    print("| | EV/Sales | EV/EBIT | P/E | P/B | ROE | FCF yield | D/E | Tax | Balance sheet | TTM basis |")
+    print("|---|---|---|---|---|---|---|---|---|---|---|")
     for r in rows:
         name = f"**{r['ticker']}**" if r["is_target"] else r["ticker"]
-        print(f"| {name} | {f(r['ev_sales'])} | {f(r['ev_ebit'])} | {f(r['pe'])} | "
+        print(f"| {name} | {f(r['ev_sales'])} | {f(r['ev_ebit'])} | {f(r['pe'])} | {f(r['pb'])} | "
+              f"{f(r['roe']*100 if r['roe'] is not None else None, 1, '%')} | "
               f"{f(r['fcf_yield']*100 if r['fcf_yield'] is not None else None, 1, '%')} | {f(r['de'], 3, '')} | "
               f"{r['tax']*100:.0f}% | {r['bs_date']} | {r['ttm_basis'] or 'no TTM (new filer)'} |")
     for n in notes:

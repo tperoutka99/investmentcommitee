@@ -4,6 +4,8 @@
 
 **WebFetch fallback:** if WebFetch fails on a page (refused, blocked, empty or 403), retry the same URL once with curl from Bash before using WebSearch or writing "not assessed": `curl -sSL -m 30 -A "Mozilla/5.0" "<url>" -o <file>`, save it in your downloads folder, strip the HTML in Python (`python3 -I`), and search it for what you need. Label the figure with the same source name as WebFetch would have (for example "(Yahoo consensus)"), not "(web)". Only if curl also fails, fall back to WebSearch or "not assessed (no data)", and name both failures in your Tool access line.
 
+**Work in few, large steps:** each tool call costs time. Download several files or pages in one Bash call rather than one call each, parse them together, and Write your report file once, at the end.
+
 **No assumptions as facts:** if your assigned data does not cover something your report asks for, write "not assessed (no data)" rather than filling it in from memory or assumption.
 
 **End your report with one line:** "Tool access:" followed by every assigned tool that failed and what you used instead, or "all assigned tools worked".

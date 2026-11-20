@@ -83,5 +83,18 @@ check("Facebook WACC (11.07%)", d["wacc_initial"] * 100, 11.07, 0.002)
 x, rr = dcf.solve(amzn, "margin", 35.08)
 check("Reverse DCF: Amazon target margin that gives $35.08 (10%)", x, 0.10, 0.02)
 
+# Equity mode (financial firms): if ROE = cost of equity in every year and in perpetuity,
+# equity is worth exactly its book value (no excess returns), whatever the growth rate.
+bank = {"mode": "equity", "years": 10, "base_book_equity": 1000, "roe": 0.10, "growth": {"start": 0.08, "end": 0.03, "hold": 3},
+        "cost_of_equity": 0.10, "terminal": {"g": 0.03, "roe": 0.10, "ke": 0.10}, "bridge": {"shares": 100}}
+check("Equity mode: ROE = Ke gives value = book (1,000)", dcf.run(bank)["equity"], 1000, 1e-9)
+check("Equity mode: same with faster growth", dcf.run(dcf.merge(bank, {"growth": 0.09}))["equity"], 1000, 1e-9)
+# Stable-growth Gordon check: constant ROE 15%, Ke 10%, g 4%: P/B = (ROE - g)/(Ke - g) = 1.8333
+gord = {"mode": "equity", "years": 10, "base_book_equity": 1000, "roe": 0.15, "growth": 0.04,
+        "cost_of_equity": 0.10, "terminal": {"g": 0.04, "roe": 0.15, "ke": 0.10}, "bridge": {"shares": 1}}
+check("Equity mode: constant-growth P/B (ROE-g)/(Ke-g) = 1.8333", dcf.run(gord)["implied_pb"], (0.15 - 0.04) / (0.10 - 0.04), 1e-9)
+x, _ = dcf.solve(gord, "roe", dcf.run(gord)["per_share"])
+check("Reverse DCF (equity mode): ROE that reproduces the value (15%)", x, 0.15, 0.001)
+
 print("\nALL PASS" if not fails else f"\n{fails} FAILED")
 sys.exit(1 if fails else 0)

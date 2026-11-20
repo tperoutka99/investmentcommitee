@@ -1,0 +1,15 @@
+{
+  "_notes": "Template for scripts/dcf.py in equity mode: banks, brokers, insurers, card lenders. Value equity directly at the cost of equity (Damodaran's FCFE / excess-return approach): debt is a financial firm's raw material, so no WACC and no net-debt bridge. Money in $M. Replace every number with a sourced input. 'roe' closes half the gap to 'target' each year; 'growth' is book-equity growth (reinvestment = growth x book equity, so payout = 1 - g/ROE). Use the bottom-up beta for 'beta'. Put pending-deal cash, legal accruals and options under bridge; do NOT add cash or subtract debt, since both are part of the balance sheet the ROE is earned on.",
+  "mode": "equity",
+  "years": 10,
+  "base_book_equity": 10078,
+  "roe": {"start": 0.20, "target": 0.18},
+  "growth": {"start": 0.15, "end": 0.04, "hold": 2},
+  "cost_of_equity": {"rf": 0.0507, "erp": 0.0441, "beta": 1.89, "stable_beta": 1.0, "hold": 5},
+  "terminal": {"g": 0.04, "roe": 0.15},
+  "bridge": {"nonop": 0, "minority": 77, "options": 987, "other_claims": 96, "shares": 900.49, "new_shares": 0},
+  "cases": {
+    "bear": {"roe": {"target": 0.12}, "growth": {"start": 0.08, "end": 0.03, "hold": 2}, "terminal": {"g": 0.03, "roe": 0.10}},
+    "bull": {"roe": {"target": 0.24}, "growth": {"start": 0.20, "end": 0.045, "hold": 2}, "terminal": {"g": 0.045, "roe": 0.18}}
+  }
+}

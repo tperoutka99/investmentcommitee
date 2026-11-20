@@ -7,6 +7,13 @@ Usage:
 Two modes, set by "mode" in the config:
   "revenue" (archetypes C/D, and any company valued off revenue, margin and sales-to-capital)
   "fcff"    (archetypes A/B: start from EBIT(1-t), reinvestment rate drives FCFF)
+  "equity"  (banks, brokers, insurers: Damodaran's FCFE / excess-return model. Debt is raw
+             material for a financial firm, so value equity directly at the cost of equity.)
+             Keys: "base_book_equity", "roe" (path, or {"start","target"} closing half the gap a
+             year), "growth" (growth in book equity), "cost_of_equity" (path, taper, or
+             {"rf","erp","beta","stable_beta","hold"}), "terminal": {"g", "roe", "ke"}.
+             FCFE(t) = ROE(t) x BV(t-1) - g(t) x BV(t-1); terminal FCFE = NI x (1 - g/ROE).
+             See scripts/dcf_template_financial.json.
 
 Config (all rates as decimals; money in one unit, e.g. $M; "path" values are 10-element lists or a
 taper spec {"start": x, "end": y, "hold": n} = x for n years, then straight-line to y in the last year):
@@ -86,7 +93,69 @@ def margins(c, n):
         out.append(cur)
     return out
 
+def ke_path(c, n):
+    k = c["cost_of_equity"]
+    if isinstance(k, dict) and "beta" in k:
+        k0 = k["rf"] + k["beta"] * k["erp"]; ks = k["rf"] + k.get("stable_beta", 1.0) * k["erp"]
+        return taper({"start": k0, "end": ks, "hold": k.get("hold", 5)}, n), {"levered_beta": k["beta"], "cost_of_equity": k0,
+                                                                              "stable_cost_of_equity": ks}
+    return taper(k, n), {}
+
+def roe_path(c, n):
+    r = c["roe"]
+    if isinstance(r, dict) and "target" in r:
+        out, cur = [], r["start"]
+        for _ in range(n):
+            cur = cur + (r["target"] - cur) / 2
+            out.append(cur)
+        return out
+    return taper(r, n)
+
+def run_equity(c):
+    n = c.get("years", 10)
+    K, kd = ke_path(c, n); R = roe_path(c, n); G = taper(c["growth"], n)
+    term = c["terminal"]; g = term["g"]; roe_t = term.get("roe", term.get("roc"))
+    k_term = term.get("ke") or term.get("wacc") or K[-1]
+    bv = c["base_book_equity"]; bv0 = bv
+    rows, disc, pv = [], 1.0, 0.0
+    for t in range(n):
+        ni = R[t] * bv
+        retained = G[t] * bv
+        fcfe = ni - retained
+        disc /= (1 + K[t]); pv += fcfe * disc
+        rows.append(dict(year=t + 1, book_equity_start=bv, roe=R[t], net_income=ni, growth=G[t], retained=retained,
+                         payout=fcfe / ni if ni else None, fcfe=fcfe, ke=K[t], excess_return=(R[t] - K[t]) * bv, pv=fcfe * disc))
+        bv = bv * (1 + G[t])
+    t_ni = roe_t * bv
+    t_reinv = g / roe_t
+    t_fcfe = t_ni * (1 - t_reinv)
+    if k_term <= g:
+        sys.exit(f"terminal cost of equity {k_term:.4f} must exceed g {g:.4f}")
+    tv = t_fcfe / (k_term - g); pv_tv = tv * disc
+    b = c.get("bridge", {})
+    eq_core = pv + pv_tv
+    equity = eq_core + b.get("nonop", 0) - b.get("minority", 0) - b.get("options", 0) - b.get("other_claims", 0)
+    shares = b.get("shares", 1) + b.get("new_shares", 0)
+    rf = c.get("rf_for_check") or (c["cost_of_equity"].get("rf") if isinstance(c["cost_of_equity"], dict) else None)
+    checks = []
+    if rf is not None:
+        checks.append(("g <= risk-free", g <= rf + 1e-9, f"g {g:.2%} vs rf {rf:.2%}"))
+    hi = [r["year"] for r in rows if r["roe"] > 0.40]
+    checks.append(("ROE <= 40% every year", not hi, f"max {max(R):.1%}" + (f"; over 40% in years {hi}" if hi else "")))
+    neg = [r["year"] for r in rows if r["fcfe"] < 0]
+    checks.append(("growth <= ROE (no negative FCFE)", not neg, "FCFE negative in years " + str(neg) if neg else "payout >= 0 every year"))
+    checks.append(("terminal reinvestment = g/ROE", True, f"{t_reinv:.2%} = {g:.2%}/{roe_t:.2%}"))
+    checks.append(("cost of equity tapers (not flat)", K[0] != K[-1] or K[0] == k_term, f"{K[0]:.2%} -> {K[-1]:.2%}, terminal {k_term:.2%}"))
+    return dict(rows=rows, pv_fcff=pv, terminal_value=tv, pv_terminal=pv_tv, operating_assets=eq_core,
+                tv_share=pv_tv / eq_core if eq_core else None, equity=equity, shares=shares, per_share=equity / shares,
+                implied_pb=equity / bv0 if bv0 else None,
+                terminal=dict(revenue=None, nopat=t_ni, reinvestment_rate=t_reinv, fcff=t_fcfe, wacc=k_term, g=g, roc=roe_t,
+                              marginal_tax=None),
+                wacc_detail=kd, checks=checks)
+
 def run(c):
+    if c["mode"] == "equity":
+        return run_equity(c)
     n = c.get("years", 10)
     W, wd = wacc_path(c, n)
     tax = taper(c.get("tax", c.get("marginal_tax", 0.25)), n)
@@ -165,7 +234,8 @@ def growth_test(c, gs=(0.02, 0.03, 0.04, 0.05)):
             out.append((g, run(cc)["per_share"]))
         except SystemExit:
             out.append((g, None))
-    eq = merge(c, {"terminal": {"roc": run(c)["terminal"]["wacc"]}})
+    key = "roe" if c["mode"] == "equity" else "roc"
+    eq = merge(c, {"terminal": {key: run(c)["terminal"]["wacc"]}})
     return out, run(eq)["per_share"]
 
 def solve(c, what, price, lo=None, hi=None):
@@ -177,12 +247,15 @@ def solve(c, what, price, lo=None, hi=None):
         if what == "margin":
             return merge(c, {"margin": {"target": x}, "terminal_margin": x if c.get("terminal_margin") is not None else None})
         if what == "roc":
-            return merge(c, {"terminal": {"roc": x}})
+            return merge(c, {"terminal": {"roe" if c["mode"] == "equity" else "roc": x}})
+        if what == "roe":   # ROE target over the forecast (and terminal ROE)
+            return merge(c, {"roe": {"start": c["roe"]["start"] if isinstance(c["roe"], dict) else taper(c["roe"], 10)[0],
+                                     "target": x}, "terminal": {"roe": x}})
         if what == "s2c":
             return merge(c, {"sales_to_capital": x})
-        sys.exit("solve: growth|margin|roc|s2c")
-    lo = lo if lo is not None else {"growth": -2.0, "margin": -0.5, "roc": 0.02, "s2c": 0.1}[what]
-    hi = hi if hi is not None else {"growth": 5.0, "margin": 0.9, "roc": 2.0, "s2c": 10.0}[what]
+        sys.exit("solve: growth|margin|roc|s2c|roe")
+    lo = lo if lo is not None else {"growth": -2.0, "margin": -0.5, "roc": 0.06, "s2c": 0.1, "roe": 0.06}[what]
+    hi = hi if hi is not None else {"growth": 5.0, "margin": 0.9, "roc": 2.0, "s2c": 10.0, "roe": 1.5}[what]
     f = lambda x: run(with_x(x))["per_share"] - price
     flo, fhi = f(lo), f(hi)
     if (flo > 0) == (fhi > 0):
@@ -200,6 +273,20 @@ def report(name, c, r):
     p = lambda v: "n/a" if v is None else f"{v*100:.2f}%"
     m = lambda v: "n/a" if v is None else f"{v:,.0f}"
     print(f"### {name}: value per share {r['per_share']:,.2f}")
+    if c["mode"] == "equity":
+        print("| Yr | Book equity (start) | ROE | Net income | Growth | Retained | FCFE | Excess return | Cost of equity |")
+        print("|---|---|---|---|---|---|---|---|---|")
+        for x in r["rows"]:
+            print(f"| {x['year']} | {m(x['book_equity_start'])} | {p(x['roe'])} | {m(x['net_income'])} | {p(x['growth'])} | "
+                  f"{m(x['retained'])} | {m(x['fcfe'])} | {m(x['excess_return'])} | {p(x['ke'])} |")
+        t = r["terminal"]
+        print(f"Terminal: net income {m(t['nopat'])}, reinvestment {p(t['reinvestment_rate'])} = g/ROE, FCFE {m(t['fcff'])}, "
+              f"TV {m(r['terminal_value'])} at cost of equity {p(t['wacc'])}, g {p(t['g'])}, ROE {p(t['roc'])}")
+        print(f"PV of FCFE {m(r['pv_fcff'])} + PV of TV {m(r['pv_terminal'])} = equity {m(r['operating_assets'])}; terminal value share {p(r['tv_share'])}; "
+              f"implied P/B {r['implied_pb']:.2f}x")
+        print(f"Equity after adjustments {m(r['equity'])} / shares {r['shares']:,.2f} = **{r['per_share']:,.2f} per share**")
+        print("Self-audit: " + "; ".join(f"{'PASS' if ok else 'FLAG'} {k} ({why})" for k, ok, why in r["checks"]))
+        return
     if c["mode"] == "revenue":
         print("| Yr | Revenue | Growth | Margin | EBIT | Tax | NOPAT | Reinvest | FCFF | Imputed ROC | WACC |")
         print("|---|---|---|---|---|---|---|---|---|---|---|")
@@ -227,7 +314,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("config")
     ap.add_argument("--case", default="all", help="base, a case name from 'cases', or all")
-    ap.add_argument("--solve", choices=["growth", "margin", "roc", "s2c"], action="append")
+    ap.add_argument("--solve", choices=["growth", "margin", "roc", "s2c", "roe"], action="append")
     ap.add_argument("--price", type=float)
     ap.add_argument("--json")
     a = ap.parse_args()
@@ -257,13 +344,14 @@ def main():
                 print(f"Reverse DCF ({what}): no solution in range at price {a.price}")
                 continue
             if what == "growth":
-                rv = r["rows"][-1].get("revenue")
+                rv = r["rows"][-1].get("revenue") if base["mode"] != "equity" else None
                 G = [row["growth"] for row in r["rows"]]
                 print(f"Reverse DCF: price {a.price} needs growth x{x:.3f} the base path (year-1 {G[0]:.1%}, "
                       f"year-10 revenue {rv:,.0f}, 10-yr CAGR {((rv / base['base_revenue']) ** (1 / len(G)) - 1):.1%})"
                       if rv else f"Reverse DCF: price {a.price} needs growth x{x:.3f} the base path")
             else:
-                label = {"margin": "target operating margin", "roc": "terminal ROC", "s2c": "sales-to-capital"}[what]
+                label = {"margin": "target operating margin", "roc": "terminal ROC/ROE", "s2c": "sales-to-capital",
+                         "roe": "ROE (forecast target and terminal)"}[what]
                 print(f"Reverse DCF: price {a.price} needs {label} {x:.4f} (base case otherwise unchanged)")
     if a.json:
         json.dump(out, open(a.json, "w"), indent=1, default=str)
