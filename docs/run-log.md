@@ -12,3 +12,4 @@
 | 2026-11-20 | UBER | v0.8 | $65.60 | WATCH | Medium | Good business, cheap, $85–95 | memos/IC_UBER_2026-11-20.md |
 | 2026-11-20 | MRVL | v0.9 | $138.47 | WATCH | Low | — (not given) | memos/IC_MRVL_2026-11-20.md |
 | 2026-11-20 | ADBE | v1.0 | $225.38 | BUY | Medium (starter) | Good business, cheap, no value given | memos/IC_ADBE_2026-11-20.md |
+| 2026-11-20 | SPCX | v1.0 | $132.87 | PASS | High | Good business, expensive, no value given | memos/IC_SPCX_2026-11-20.md |
