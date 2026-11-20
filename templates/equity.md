@@ -57,7 +57,7 @@ Source: <scripts/edgar_facts.py output, filings and dates>. <One line of footnot
 
 **Reverse DCF:** <what the price implies for growth and for margin>.
 **Growth-invariance test:** <values across terminal g, and with ROC = WACC>.
-**Self-audit flags:** <FLAG lines from dcf.py, or "None.">
+**Self-audit flags:** <FLAG lines from dcf.py and what you changed to clear them (an imputed-ROC flag over 40% must be fixed or justified by 3 years of actual ROIC), or "None.">
 
 **Comps** (scripts/peers.py)
 | | EV/Sales | EV/EBIT | P/E | P/B | ROE | FCF yield |
