@@ -6,4 +6,3 @@
 4. **Multi-year revenue consensus** stops at 2 years (Yahoo). Years 3+ are the analyst's own.
 5. **Track record.** Compare each memo's verdict and trigger prices against what the stock did 30/90 days later, to see if the committee is any good.
 6. **Speed: fewer, bigger tool calls (other agents).** Added to the equity analyst in v1.2; not yet to macro or short seller. Each agent round trip costs ~10s of model time. Proposed rule in `reference/agent-rules.md`: batch fetches into one Bash call where possible, and write the report file once.
-7. **Speed: price history still typed by hand.** Twelve Data's MCP output can't be saved straight to a file, so the equity analyst still writes 5-6 symbols x 105 weekly closes into closes.json. A curl source for weekly closes (e.g. Yahoo's chart API) would remove it, but changes the beta's data source.

@@ -3,13 +3,14 @@
 
 Usage:
   python3 -I scripts/peers.py --peers CRM,ADSK,HUBS,MSFT --prices CRM=240.1,ADSK=301.2,... \
-      --closes closes.json --target-de 0.078 --target-tax 0.21 [--target ADBE --target-price 221.63] [--out DIR]
+      --target-de 0.078 --target-tax 0.21 [--target ADBE --target-price 221.63] [--out DIR]
 
 --prices   today's price per peer (Robinhood get_equity_quotes or Twelve Data get_quote).
---closes   JSON file of 2 years of weekly closes from Twelve Data get_time_series
-           (interval 1week, outputsize 105), keyed by symbol, including SPY. Each value may be
-           Twelve Data's "values" list ([{"datetime": ..., "close": ...}, ...]) or a plain list of
-           closes newest-first. Omit --closes to skip the beta.
+Prices for the beta: by default the script downloads 2 years of weekly closes for SPY and each
+           peer from Yahoo Finance's chart data (query1.finance.yahoo.com) and saves them to
+           <out>/closes_yahoo.json. Any symbol Yahoo fails on is reported; supply it with
+           --closes, a JSON file keyed by symbol (Twelve Data get_time_series values list, or a
+           plain list of closes newest-first), which takes priority over Yahoo. --no-beta skips it.
 --target-de / --target-tax   the valued company's debt-to-equity (market) and marginal tax rate,
            used to relever the median unlevered beta.
 
@@ -39,6 +40,25 @@ def debt_of(r):
         return d if concept == "LongTermDebt" and cur and cur < d else d + cur
     return d + cur
 
+def yahoo_closes(sym, weeks=105):
+    """2 years of weekly closes from Yahoo's chart endpoint, as {YYYY-MM-DD: close}."""
+    import urllib.request
+    from datetime import datetime, timezone
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{sym}?range=2y&interval=1wk"
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    for i in range(2):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                d = json.load(r)["chart"]["result"][0]
+            break
+        except Exception:
+            if i:
+                raise
+    pts = {datetime.fromtimestamp(ts, timezone.utc).strftime("%Y-%m-%d"): c
+           for ts, c in zip(d["timestamp"], d["indicators"]["quote"][0]["close"]) if c is not None}
+    keep = sorted(pts)[-weeks:]
+    return {k: pts[k] for k in keep}
+
 def closes_of(x):
     if isinstance(x, dict) and "values" in x:
         x = x["values"]
@@ -64,6 +84,7 @@ def main():
     ap.add_argument("--peers", required=True)
     ap.add_argument("--prices", required=True)
     ap.add_argument("--closes")
+    ap.add_argument("--no-beta", action="store_true")
     ap.add_argument("--target-de", type=float)
     ap.add_argument("--target-tax", type=float, default=0.21)
     ap.add_argument("--target")
@@ -76,8 +97,28 @@ def main():
     tickers = [t.strip().upper() for t in a.peers.split(",")]
     if a.target:
         prices[a.target.upper()] = a.target_price
-    closes = json.load(open(a.closes)) if a.closes else None
-    spy = closes_of(closes["SPY"]) if closes else None
+    closes, src = None, {}
+    if not a.no_beta:
+        given = json.load(open(a.closes)) if a.closes else {}
+        closes, fetched, failed = {}, {}, []
+        for s in ["SPY"] + tickers:
+            if s in given:
+                closes[s] = closes_of(given[s]); src[s] = "file"
+                continue
+            try:
+                fetched[s] = yahoo_closes(s); closes[s] = fetched[s]; src[s] = "Yahoo chart"
+            except Exception as e:
+                failed.append(f"{s} ({type(e).__name__})")
+        if a.out and fetched:
+            os.makedirs(a.out, exist_ok=True)
+            json.dump(fetched, open(os.path.join(a.out, "closes_yahoo.json"), "w"))
+        if failed:
+            print("Price history not downloaded for: " + ", ".join(failed) +
+                  ". Supply these with --closes (Twelve Data get_time_series) and rerun.")
+        if "SPY" not in closes:
+            print("No SPY prices: beta skipped.")
+            closes = None
+    spy = closes["SPY"] if closes else None
     overrides = {k.upper(): float(v) for k, v in (x.split("=") for x in a.shares.split(","))} if a.shares else {}
     notes = []
     rows = []
@@ -108,7 +149,7 @@ def main():
                    ttm_basis=(r["flows"]["revenue"]["ttm"] or {}).get("basis"),
                    bs_date=r.get("balance_sheet_date"), is_target=(t == (a.target or "").upper()))
         if closes and t in closes and not row["is_target"]:
-            b, n = beta(closes_of(closes[t]), spy)
+            b, n = beta(closes[t], spy)
             row.update(beta_raw=b, weeks=n, beta_unlev=b / (1 + (1 - t_rate) * row["de"]) if row["de"] is not None else None)
         rows.append(row)
     f = lambda v, d=1, s="x": "n/m" if v is None else f"{v:.{d}f}{s}"
@@ -126,7 +167,9 @@ def main():
     if closes:
         used = [r for r in rows if r.get("beta_unlev") is not None and r["weeks"] >= a.min_weeks]
         short = [r for r in rows if r.get("weeks") is not None and r["weeks"] < a.min_weeks]
-        print("\n**Bottom-up beta** (weekly returns vs SPY, Twelve Data closes)")
+        srcs = sorted(set(src.values()))
+        print(f"\n**Bottom-up beta** (weekly returns vs SPY; prices: {', '.join(srcs)}"
+              + (f", downloaded {__import__('datetime').date.today()}" if "Yahoo chart" in srcs else "") + ")")
         print("| Peer | Weeks | Raw beta | D/E | Tax | Unlevered |")
         print("|---|---|---|---|---|---|")
         for r in rows:

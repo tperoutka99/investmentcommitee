@@ -13,7 +13,7 @@ It is research only. No agent may place, cancel or change any trade, alert or wa
 |---|---|---|---|---|
 | **Orchestrator** | `.claude/skills/investment-committee/SKILL.md` | Resolves the ticker, launches the agents, fact-checks, saves output. Never gives its own view. | Robinhood quotes and fundamentals, SEC EDGAR | `data_flags.md`, final files |
 | **Macro strategist** | `.claude/agents/macro-strategist.md` | Tailwind / Neutral / Headwind for *this* company | FRED, UUP via Twelve Data, Fed statements, Polymarket + Kalshi, 2 company facts from the orchestrator | `macro.md` |
-| **Equity analyst** | `.claude/agents/equity-analyst.md` | Business quality, Damodaran DCF, comps, consensus check | SEC EDGAR (statements, notes, deal 8-Ks), Robinhood (quotes, fundamentals, ratings, earnings), Yahoo consensus, FRED 10Y, company IR, peers' SEC data, Twelve Data peer prices | `equity.md` |
+| **Equity analyst** | `.claude/agents/equity-analyst.md` | Business quality, Damodaran DCF, comps, consensus check | SEC EDGAR (statements, notes, deal 8-Ks), Robinhood (quotes, fundamentals, ratings, earnings), Yahoo consensus, FRED 10Y, company IR, peers' SEC data, Yahoo chart peer prices (Twelve Data backup) | `equity.md` |
 | **Short seller** | `.claude/agents/short-seller.md` | Strongest case against owning it | SEC EDGAR (10-K, 10-Qs, 8-Ks, risk factors, Form 4/144), Twelve Data news, Robinhood ratings, web | `short.md` |
 | **Portfolio manager** | `.claude/agents/portfolio-manager.md` | Decides; writes the memo | Only the three reports, the Data flags note and the prior memo | `memo.md` |
 
