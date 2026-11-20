@@ -46,6 +46,7 @@ Shared how-tos in `reference/`: `sec-edgar.md`, `fred.md`, `rate-hike-odds.md`, 
 | `docs/run-log.md` | One row per run, with Trey's guess |
 | `docs/backlog.md` | Known gaps and ideas, not yet approved |
 | `scripts/check_setup.sh` | Checks network access to the free data sources |
+| `scripts/edgar_facts.py`, `scripts/peers.py`, `scripts/dcf.py` | The equity analyst's tested tools: SEC statements, comps + bottom-up beta, Damodaran DCF. Template: `scripts/dcf_template.json`. Tests: `python3 -I scripts/test_dcf.py` |
 
 ## Setup
 - MCP servers named exactly **`Robinhood`** and **`Twelve_Data`** (agent `tools:` lines use `mcp__Robinhood__...` and `mcp__Twelve_Data__...`). If yours have other names, update the `tools:` lines.

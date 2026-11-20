@@ -5,5 +5,5 @@
 3. **Institutional (13F) data** comes back "not assessed" most runs. No free structured source found yet.
 4. **Multi-year revenue consensus** stops at 2 years (Yahoo). Years 3+ are the analyst's own.
 5. **Track record.** Compare each memo's verdict and trigger prices against what the stock did 30/90 days later, to see if the committee is any good.
-6. **Speed: reusable equity scripts.** On ADBE/SPCX the equity analyst took 7.5 and 10.8 min. Its data calls took only ~30-40s; the rest was the model writing new DCF, beta and peer scripts and running 46-63 small commands. Proposed: commit tested scripts (`scripts/edgar_facts.py`, `scripts/peer_beta.py`, `scripts/dcf.py`) that the analyst runs with its inputs.
-7. **Speed: fewer, bigger tool calls.** Each agent round trip costs ~10s of model time. Proposed rule in `reference/agent-rules.md`: batch fetches into one Bash call where possible, and write the report file once.
+6. **Speed: fewer, bigger tool calls (other agents).** Added to the equity analyst in v1.2; not yet to macro or short seller. Each agent round trip costs ~10s of model time. Proposed rule in `reference/agent-rules.md`: batch fetches into one Bash call where possible, and write the report file once.
+7. **Speed: price history still typed by hand.** Twelve Data's MCP output can't be saved straight to a file, so the equity analyst still writes 5-6 symbols x 105 weekly closes into closes.json. A curl source for weekly closes (e.g. Yahoo's chart API) would remove it, but changes the beta's data source.

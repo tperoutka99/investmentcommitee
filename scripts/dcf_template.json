@@ -1,0 +1,24 @@
+{
+  "_notes": "Template for scripts/dcf.py. Replace every number with a sourced input; delete this key's advice if you like. Money in $M. 'growth', 'tax', 'sales_to_capital' and WACC accept a 10-value list or a taper {start, end, hold}. Cases deep-merge over the base.",
+  "mode": "revenue",
+  "years": 10,
+  "base_revenue": 26601,
+  "base_margin": 0.387,
+  "invested_capital": 24000,
+  "growth": {"start": 0.095, "end": 0.04, "hold": 2},
+  "margin": {"target": 0.37, "rule": "converge_half"},
+  "sales_to_capital": 2.5,
+  "tax": 0.21,
+  "marginal_tax": 0.21,
+  "wacc": {"rf": 0.0507, "erp": 0.0441, "beta_u": 1.04, "de": 0.078, "tax": 0.21, "pretax_kd": 0.056,
+           "stable_beta": 1.0, "stable_debt_ratio": 0.10, "hold": 5},
+  "terminal": {"g": 0.04, "roc": 0.20},
+  "bridge": {"cash": 5639, "nonop": 0, "debt": 6762, "minority": 0, "options": 0, "other_claims": 340,
+             "shares": 389.2, "new_shares": 0},
+  "cases": {
+    "bear": {"growth": {"start": 0.06, "end": 0.03, "hold": 2}, "margin": {"target": 0.30},
+             "terminal": {"g": 0.03, "roc": 0.0954}},
+    "bull": {"growth": {"start": 0.11, "end": 0.045, "hold": 2}, "margin": {"target": 0.42},
+             "terminal": {"g": 0.045, "roc": 0.30}}
+  }
+}
