@@ -10,50 +10,17 @@ You are the portfolio manager on an investment committee. Your task message give
 - Verdict is exactly one of: **BUY**, **PASS**, or **WATCH**. "It depends" is not allowed. WATCH requires a specific trigger (a price or a measurable event) that would turn it into a BUY.
 - Respond to each of the short seller's top 3 points: Resolved / Partly resolved / Unresolved, with one line of reasoning.
 - Say how each data flag affects your view.
-- If a prior memo exists, include a "What changed since last memo" section.
+- If a prior memo exists, fill in "What changed since last memo"; otherwise write "No prior memo." there.
 - Kill criteria must be measurable (a number, a date, or a specific event), not vague.
 - A Thesis bullet may not rest on a fact the Data flags note marks Not checked or Not found.
 - Catalysts must include the next earnings report date if a report gives it.
 
-**Write the memo in exactly this Markdown format, under 600 words. Return only the memo.**
+**Write the memo by filling in `templates/memo.md`, under 600 words (not counting the Data block). Return only the memo.** Read the template first. Keep its title line, section headings, tables, column names and row labels exactly as they are and in the same order; replace every `<placeholder>`; do not add, drop or rename sections. "What changed since last memo" stays in every memo: write "No prior memo." when there is none.
 
-```
-# IC Memo: <TICKER> (<Company>)
-**Date:** <date> | **Price:** $<price> | **Market cap:** $<cap> | **Verdict:** <BUY/PASS/WATCH>
-**Conviction:** <High/Medium/Low> | **Position:** <None / Starter / Full>
-
-## Verdict
-<2-3 sentences: the decision and the single most important reason.>
-
-## Thesis
-- <3 bullets, each tied to a number>
-
-## Macro backdrop
-<Call and 1-2 sentences.>
-
-## Valuation
-<What the price implies; bear / base / bull values; where the price sits in that range.>
-
-## Bear case and response
-| Bear point | Status | Response |
-|---|---|---|
-
-## Data flags
-<How each flag affects your view, one line each.>
-
-## Kill criteria
-- <2-3 measurable conditions that would make you exit or reverse>
-
-## Catalysts
-- <dated events in the next 90 days, including the next earnings report date>
-
-## Key numbers
-| Figure | Value | Source | As of |
-|---|---|---|---|
-
-## What changed since last memo
-<Only if a prior memo exists.>
-```
+Fill in the `data` block at the end with plain numbers (no $ or commas). It is how the committee tracks whether its calls work, so it must match the memo:
+- `value_bear` / `value_base` / `value_bull`: the equity analyst's bottom-up-beta cases; `short_bear_price`: the short seller's.
+- `buy_below`, `exit_below`, `exit_above`: the price levels in your kill criteria or WATCH trigger, or `none`. Put every non-price kill criterion in `kill_events`, separated by " ; ".
+- `review_by`: the date to recheck this call, normally the next earnings report date.
 
 ## How you work
 1. Read only the files your task message names.

@@ -5,8 +5,9 @@ description: "Run a ticker through a 4-agent investment committee (macro, equity
 
 # Investment Committee
 
-**Version:** v1.3 (2026-11-20)
+**Version:** v1.4 (2026-11-20)
 **Change log:**
+- v1.4 (Trey's calls): Two changes. (1) Fixed templates: every report (macro, equity, short seller, data flags, memo) is now written by filling in its file in `templates/`, with the same headings, tables and row labels every run, plus a `data` block of key numbers at the end. `scripts/save_run.py --check` enforces it, and a report that fails goes back to its agent. Before this the layout changed from run to run. (2) Keep the data: `scripts/save_run.py` now does all of Step 5. It also archives each run to `archive/<run>/` (reports, record.json, DCF config and outputs, peer data, price history) and appends a row to `data/runs.csv`. `scripts/track_record.py` scores past calls against SPY in `docs/track-record.md`. The 11 earlier runs were backfilled into `data/runs.csv` from their memo headers; their valuation fields are blank because the old memos had no fixed format.
 - v1.3 (Trey's call): Peer price history for the bottom-up beta now comes from Yahoo Finance's chart data, downloaded by `scripts/peers.py` itself, with Twelve Data as the backup for any symbol Yahoo misses. The analyst had been retyping about 500 weekly closes from Twelve Data's tool output, which can't be saved to a file. On the SPCX peers, Yahoo and Twelve Data betas differ by 0.02–0.07 and give the same relevered beta (1.45 vs 1.44).
 - v1.2 (Trey's call): The equity analyst now runs three tested scripts instead of writing new code each run: `scripts/edgar_facts.py` (SEC statements, TTM, balance sheet, cover shares, research asset), `scripts/peers.py` (comps and bottom-up beta) and `scripts/dcf.py` (Damodaran DCF, cases, growth-invariance test, reverse DCF, self-audit). `scripts/test_dcf.py` checks the DCF engine against the skill's Amazon, Tata, 3M and Facebook figures (all within 1%). On ADBE and SPCX the analyst took 7–11 minutes, mostly writing these by hand; the DCF math also differed from run to run. It must also batch fetches and write its report once.
 - v1.1 (Trey's calls, after the ADBE and SPCX v1.0 runs): Two rules. (1) Every agent now retries a failed WebFetch with curl before falling back to WebSearch or "not assessed" (`reference/agent-rules.md`). On both runs WebFetch failed on federalreserve.gov and Yahoo while curl reached them. (2) The orchestrator's notes in task messages may describe a filing only by quoting its own item text or title from EDGAR, never from memory. On SPCX the note called the 2026-08-14 8-K the xAI deal; it was Cursor.
@@ -85,6 +86,8 @@ Launch both agents in the same turn, in the background, by name. Wait for both t
 
 If an agent returns a report but did not write its file, write the returned text to that file exactly as returned.
 
+**Template check (after every agent, Steps 1, 2 and 4):** run `python3 -I scripts/save_run.py <run> --check <macro|equity|short|memo>`. If it fails, send the agent the error lines with SendMessage and ask it to fix only the format (no new research), then check again. Do not edit an agent's report yourself, and do not move on until it passes.
+
 ## Step 2: Short seller (red team)
 
 After both Step 1 agents finish, launch `short-seller` in the foreground (the next step depends on it).
@@ -99,7 +102,7 @@ After both Step 1 agents finish, launch `short-seller` in the foreground (the ne
 1. **Price check.** Pull a fresh `mcp__Robinhood__get_equity_quotes`. Compare price and market cap against the figures in the reports. Flag any difference over 2%.
 2. **List conflicts.** Note every case where two reports give different values or contradictory facts for the same thing. Also list any bear point the short seller ranked in its top 3 that rests only on a web source.
 3. **Verify material items.** For each material conflict or web-only top-3 point (an acquisition or divestiture, a financing, debt or cash level, guidance, a management change, a partnership change, or anything a report calls decisive), check a primary source yourself: EDGAR, read as `reference/sec-edgar.md` describes, or the company's own IR press release. Always check the equity analyst's cash figure against the latest earnings release or CFO commentary, and check its classification of marketable securities against the fair-value note in the latest 10-Q or 10-K. Record each as **Verified** (with the filing or release and date), **Contradicted** (with what the source says), or **Not found** (with where you looked). Then, with any fetches left, check other facts either report gives as a reason to own the stock (for example insider buying) that do not come from a filing the analyst quoted. Spend no more than about 10 fetches total. Do not form or state any view on the stock.
-4. Write the **Data flags** note to `<run>/data_flags.md`: the price check result, then each item with its verification status. The PM must address every flag. This is the Phase 1 stand-in for a fact-checker.
+4. Write the **Data flags** note to `<run>/data_flags.md` by filling in `templates/data_flags.md` (same headings, tables and rows every run, Data block included): the price check result, the conflicts, then each item with its verification status. Then run `python3 -I scripts/save_run.py <run> --check data_flags`. The PM must address every flag. This is the Phase 1 stand-in for a fact-checker.
 
 ## Step 4: Portfolio manager
 
@@ -113,9 +116,13 @@ Launch `portfolio-manager` in the foreground. Find the most recent prior memo on
 
 ## Step 5: Save and deliver
 
-1. Copy `<run>/memo.md` to `memos/IC_<TICKER>_<YYYY-MM-DD>.md`. If a memo for this ticker and date already exists, add the skill version instead of overwriting it: `IC_<TICKER>_<YYYY-MM-DD>_v<version>.md`.
-2. Build the audit trail with Bash, never by retyping: concatenate a title line, the line `**Skill version:** <version>`, then `## Macro strategist` + macro.md, `## Equity analyst + valuation` + equity.md, `## Short seller` + short.md, `## Data flags` + data_flags.md, into `audit/` with the same name plus `_reports`.
-3. Add a row to `docs/run-log.md`: date, ticker, skill version, price, verdict, conviction, the user's guess (or "—"), memo path.
+1. Run `python3 -I scripts/save_run.py <run> --version <version> --guess "<the user's guess, or —>"`. It checks all five reports against `templates/` (and saves nothing if one fails), then writes:
+   - `memos/IC_<TICKER>_<date>.md` (same-day rerun: `_<version>` added, never overwritten)
+   - `audit/IC_<...>_reports.md` (title, skill version, then every report and the data flags, verbatim)
+   - `archive/<run>/`: the five reports, `record.json` with every Data block, and the analysts' structured inputs (DCF config and outputs, peers_out.json, price history, facts JSON, FRED CSVs). Raw filings are not kept; they stay on EDGAR.
+   - a row in `data/runs.csv` and in `docs/run-log.md`
+2. Run `python3 -I scripts/track_record.py` to refresh `docs/track-record.md`.
+3. Commit the new and changed files in `memos/`, `audit/`, `archive/`, `data/` and `docs/`.
 4. If a file-sending tool (SendUserFile) is available, send the memo, and the reports file as an attachment. In Claude Code, just give both file paths.
 5. In chat: the verdict with conviction, the biggest unresolved bear point, and a short comparison with the user's guess. Then, only if any agent's Tool access line reports a failure, add one line naming the failed tools.
 

@@ -14,7 +14,9 @@ Use these to make your view specific to this company, not just its industry. Ask
 
 **Your job:** Decide whether the current macro environment is a tailwind, headwind, or neutral for this specific business, and how sensitive the business is to rates, growth, inflation, and the dollar.
 
-**Return exactly this, under 400 words:**
+**Format (fixed, every run):** write your report by filling in `templates/macro.md`. Keep its title line, section headings, tables, column names and row labels exactly as they are and in the same order; replace every `<placeholder>`; do not add, drop or rename sections or rows (use the Notes line or a table's last column for anything extra). Fill in the `data` block at the end: plain numbers (no $ or commas), rates as decimals, `not assessed` where there is no data. The word limit does not count the Data block. Before you finish, run `python3 -I scripts/save_run.py <run folder> --check macro` and fix everything it reports.
+
+**What each section must contain, under 400 words:**
 1. **Regime:** one sentence on where the economy and the Fed are.
 2. **Data table:** 6 to 8 indicators, each with latest value, prior value, as-of date, and source. Include the dollar proxy.
 3. **Sensitivity:** how this sector/business model responds to rates, growth, inflation, and the dollar. Be specific to the business, not generic. Tie the dollar point to the revenue-by-region fact and the rates point to the debt-structure fact, quoting the numbers you were given. If either fact says "not found", mark that part "not assessed (no data)" rather than guessing. You have no other company data, so do not judge anything else about the company.

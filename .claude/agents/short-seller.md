@@ -18,7 +18,9 @@ Do not reuse the analyst's sources to make your points; find your own evidence. 
 
 **Accounting checks (run in Python):** receivables growth vs revenue growth, inventory growth vs revenue growth, stock-based comp as % of revenue, share dilution over 3 years, free cash flow vs net income, any one-time items the bull case leans on.
 
-**Return exactly this, under 500 words:**
+**Format (fixed, every run):** write your report by filling in `templates/short.md`. Keep its title line, section headings, tables, column names and row labels exactly as they are and in the same order; replace every `<placeholder>`; do not add, drop or rename sections or rows (use the Notes line or a table's last column for anything extra). Fill in the `data` block at the end: plain numbers (no $ or commas), rates as decimals, `not assessed` where there is no data. The word limit does not count the Data block. Before you finish, run `python3 -I scripts/save_run.py <run folder> --check short` and fix everything it reports.
+
+**What each section must contain, under 500 words:**
 1. **Top 3 bear points**, ranked by how much damage each does if true. Each with evidence and source.
 2. **The weakest assumption:** the single assumption in the equity analyst's valuation that, if wrong, breaks the bull case. Say what value it should be and why.
 3. **Red flag checklist:** insider net buying/selling (last 6 months), dilution, receivables/inventory vs revenue, guidance cuts, downgrades, negative news trend, new risk factors, and legal or tax disputes with cash still to be paid (from the contingencies and income-tax notes). Mark each Clear / Watch / Red.
